@@ -1,17 +1,17 @@
 ---
-- name: Shell > Bash > Create /etc/profile.d folder
+- name: Linux Defaults > Shell > Bash > Create /etc/profile.d folder
   ansible.builtin.file:
     path: /etc/profile.d
     state: directory
     mode: '0755'
 
-- name: Shell > Bash > Create Default Aliases
-  include_tasks: "shell/bash/aliases.yaml"
+- name: Linux Defaults > Shell > Bash > Create Default Aliases
+  ansible.builtin.include_tasks: "shell/bash/aliases.yaml"
 
-- name: Shell > Bash > Create Default Functions
-  include_tasks: "shell/bash/functions.yaml"
+- name: Linux Defaults > Shell > Bash > Create Default Functions
+  ansible.builtin.include_tasks: "shell/bash/functions.yaml"
 
-- name: Shell > Bash > Create Aliases
+- name: Linux Defaults > Shell > Bash > Create Aliases
   ansible.builtin.lineinfile:
     dest: "/etc/profile.d/00-ansible-bash-aliases.sh"
     create: true

@@ -1,11 +1,11 @@
 ---
-- name: Shell > RedHat > Configure Default > bash
+- name: Linux Defaults > Shell > RedHat > Configure Default > bash
   ansible.builtin.include_tasks: "shell/bash/main.yaml"
 
-- name: Shell > RedHat > Function > yum
+- name: Linux Defaults > Shell > RedHat > Function > yum
   ansible.builtin.blockinfile:
     path: "/etc/profile.d/01-ansible-bash-function-yum.sh"
-    create: yes
+    create: true
     mode: 0644
     block: |
       yum () {
@@ -20,10 +20,10 @@
         fi
       }
 
-- name: Shell > RedHat > Function > dnf
+- name: Linux Defaults > Shell > RedHat > Function > dnf
   ansible.builtin.blockinfile:
     path: "/etc/profile.d/01-ansible-bash-function-dnf.sh"
-    create: yes
+    create: true
     mode: 0644
     block: |
       dnf () {

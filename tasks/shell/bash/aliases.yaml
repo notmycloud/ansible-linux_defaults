@@ -1,5 +1,5 @@
 ---
-- name: Shell > Bash > Aliases > Add Default Aliases
+- name: Linux Defaults > Shell > Bash > Aliases > Add Default Aliases
   ansible.builtin.lineinfile:
     dest: "/etc/profile.d/00-ansible-bash-default-aliases.sh"
     create: true

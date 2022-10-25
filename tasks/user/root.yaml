@@ -1,17 +1,17 @@
 ---
-- name: User > Configure > Root > Password
+- name: Linux Defaults > User > Configure > Root > Password
   ansible.builtin.user:
     name: root
     password: "{{ ansible_default_root_pass | password_hash('sha512', machine_id['content'] | b64decode) }}"
-  nolog: true
+  no_log: true
 
-- name: User > Configure > Root > .ssh Directory
+- name: Linux Defaults > User > Configure > Root > .ssh Directory
   ansible.builtin.file:
     path: /root/.ssh
     state: directory
     mode: '0700'
 
-- name: User > Configure > Root > SSH Keys
+- name: Linux Defaults > User > Configure > Root > SSH Keys
   ansible.builtin.openssh_keypair:
     path: "/root/.ssh/id_{{ keytype }}"
     type: "{{ keytype }}"

@@ -1,14 +1,14 @@
 ---
-- name: Packages > Redhat > DNF > Install
+- name: Linux Defaults > Packages > Redhat > DNF > Install
   ansible.builtin.dnf:
     name: "{{ default_packages | default(packages) }}"
     state: latest
 
-- name: Packages > Redhat > DNF > Upgrade
+- name: Linux Defaults > Packages > Redhat > DNF > Upgrade
   ansible.builtin.dnf:
     name: "*"
     state: latest
 
-- name: Packages > Redhat > DNF > Autoremove
+- name: Linux Defaults > Packages > Redhat > DNF > Autoremove
   ansible.builtin.dnf:
     autoremove: true

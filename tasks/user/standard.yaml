@@ -1,5 +1,5 @@
 ---
-- name: User > Configure > Standard >{{ user.name }} > Create
+- name: Linux Defaults > User > Configure > Standard > Create > {{ user.name }}
   ansible.builtin.user:
     name: "{{ user.name }}"
     update_password: on_create
@@ -7,13 +7,13 @@
     groups: "{{ user.groups | default(omit) }}"
     shell: "{{ default_shell | default(shell) }}"
 
-- name: User > Configure > Standard > {{ user.name }} > .ssh Directory
+- name: Linux Defaults > User > Configure > Standard > .ssh Directory > {{ user.name }}
   ansible.builtin.file:
     path: /home/{{ user.name }}/.ssh
     state: directory
     mode: '0700'
 
-- name: User > Configure > Standard > {{ user.name }} > SSH Keys
+- name: Linux Defaults > User > Configure > Standard > SSH Keys > {{ user.name }}
   ansible.builtin.openssh_keypair:
     path: "/home/{{ user.name }}/.ssh/id_rsa"
     type: rsa
@@ -23,7 +23,7 @@
     group: "{{ user.name }}"
     force: false
 
-- name: User > Configure > Standard > {{ user.name }} > Authorized Keys
+- name: Linux Defaults > User > Configure > Standard > Authorized Keys > {{ user.name }}
   ansible.builtin.authorized_key:
     user: "{{ user.name }}"
     key: "{{ authorized_key }}"
@@ -32,14 +32,14 @@
     loop_var: authorized_key
   when: user.authorized_keys is defined
 
-- name: User > Configure > Standard > {{ user.name }} > .ssh Permissions
+- name: Linux Defaults > User > Configure > Standard > .ssh Permissions > {{ user.name }}
   ansible.builtin.file:
     path: /home/{{ user.name }}/.ssh
     recurse: true
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
 
-- name: User > Configure > Standard > {{ user.name }} > Sudoers
+- name: Linux Defaults > User > Configure > Standard > Sudoers > {{ user.name }}
   ansible.builtin.lineinfile:
     dest: /etc/sudoers.d/{{ user.name }}
     regexp: "{{ user.name }} ALL"
@@ -50,7 +50,7 @@
     - user.sudo is defined
     - user.sudo
 
-# - name: User > Configure > Standard > {{ user.name }} > Sudoers
+# - name: Linux Defaults > User > Configure > Standard > Sudoers > {{ user.name }}
 #   community.general.sudoers:
 #     name: "{{ user.name }}"
 #     nopassword: true

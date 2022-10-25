@@ -1,17 +1,22 @@
 ---
-- name: User > Salt > Read Machine-ID
+- name: Linux Defaults > User > Salt > Read Machine-ID
   ansible.builtin.slurp:
     src: /etc/machine-id
   register: machine_id
 
-- name: User > Configure > Root
+- name: Linux Defaults > User > Configure > Root
   ansible.builtin.include_tasks: "user/root.yaml"
 
-- name: User > Configure > Standard
+- name: Linux Defaults > User > Configure > Standard > Global Users
   ansible.builtin.include_tasks: "user/standard.yaml"
-  vars:
-    - user: "{{ loop_user }}"
-  loop: "{{ global_users + host_users }}"
+  loop: "{{ global_users }}"
   loop_control:
-    loop_var: loop_user
+    loop_var: user
+  when: global_users is defined
+
+- name: Linux Defaults > User > Configure > Standard > Host Users
+  ansible.builtin.include_tasks: "user/standard.yaml"
+  loop: "{{ host_users }}"
+  loop_control:
+    loop_var: user
   when: host_users is defined

@@ -1,11 +1,11 @@
 ---
-- name: Shell > Debian > Configure Default > bash
+- name: Linux Defaults > Shell > Debian > Configure Default > bash
   ansible.builtin.include_tasks: "shell/bash/main.yaml"
 
-- name: Shell > Debian > Function > apt-get
+- name: Linux Defaults > Shell > Debian > Function > apt-get
   ansible.builtin.blockinfile:
     path: "/etc/profile.d/01-ansible-bash-function-apt-get.sh"
-    create: yes
+    create: true
     mode: 0644
     block: |
       apt-get () {
@@ -20,10 +20,10 @@
         fi
       }
 
-- name: Shell > Debian > Function > apt
-  blockinfile:
+- name: Linux Defaults > Shell > Debian > Function > apt
+  ansible.builtin.blockinfile:
     path: "/etc/profile.d/01-ansible-bash-function-apt.sh"
-    create: yes
+    create: true
     mode: 0644
     block: |
       apt () {

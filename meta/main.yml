@@ -1,4 +1,5 @@
 galaxy_info:
+  namespace: notmycloud
   role_name: linux_defaults
   author: Austin Arbour
   description: Highly opinionated defaults for Linux systems.
@@ -39,6 +40,16 @@ galaxy_info:
   #   - 1.0
   #   - 7
   #   - 99.99
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: Alpine
+      versions:
+        - all
 
   galaxy_tags:
     # List tags for your role here, one per line. A tag is a keyword that describes
