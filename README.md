@@ -22,6 +22,7 @@ ssh_well_known_hosts:               # Does not include defaults. Array of hosts 
   - github.com
   - gitlab.com
 default_packages:                   # Array of packages to install, defaults are defined per system, see vars/*.yaml
+ansible_default_root_pass:          # Plain text password for the root user.
 bash_aliases:                       # Array of Dicts of aliases to install for bash. Defaults are defined per system in vars/*.yaml
   - name: ls
     command: ls -lah
