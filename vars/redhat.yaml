@@ -1,0 +1,9 @@
+---
+packages:
+  - sudo
+  - python3
+  - vim-enhanced
+  - wget
+  - curl
+
+shell: bash

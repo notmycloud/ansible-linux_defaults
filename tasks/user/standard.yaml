@@ -1,0 +1,61 @@
+---
+- name: User > Configure > Standard >{{ user.name }} > Create
+  ansible.builtin.user:
+    name: "{{ user.name }}"
+    update_password: on_create
+    password: "{{ user.pass | password_hash('sha512', machine_id['content'] | b64decode) }}"
+    groups: "{{ user.groups | default(omit) }}"
+    shell: "{{ default_shell | default(shell) }}"
+
+- name: User > Configure > Standard > {{ user.name }} > .ssh Directory
+  ansible.builtin.file:
+    path: /home/{{ user.name }}/.ssh
+    state: directory
+    mode: '0700'
+
+- name: User > Configure > Standard > {{ user.name }} > SSH Keys
+  ansible.builtin.openssh_keypair:
+    path: "/home/{{ user.name }}/.ssh/id_rsa"
+    type: rsa
+    size: 4096
+    state: present
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    force: false
+
+- name: User > Configure > Standard > {{ user.name }} > Authorized Keys
+  ansible.builtin.authorized_key:
+    user: "{{ user.name }}"
+    key: "{{ authorized_key }}"
+  loop: "{{ user.authorized_keys }}"
+  loop_control:
+    loop_var: authorized_key
+  when: user.authorized_keys is defined
+
+- name: User > Configure > Standard > {{ user.name }} > .ssh Permissions
+  ansible.builtin.file:
+    path: /home/{{ user.name }}/.ssh
+    recurse: true
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+
+- name: User > Configure > Standard > {{ user.name }} > Sudoers
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers.d/{{ user.name }}
+    regexp: "{{ user.name }} ALL"
+    line: "{{ user.name }} ALL=(ALL) NOPASSWD:ALL"
+    state: present
+    validate: "/usr/sbin/visudo -cf %s"
+  when:
+    - user.sudo is defined
+    - user.sudo
+
+# - name: User > Configure > Standard > {{ user.name }} > Sudoers
+#   community.general.sudoers:
+#     name: "{{ user.name }}"
+#     nopassword: true
+#     commands: ALL
+#     user: "{{ user.name }}"
+#   when:
+#     - user.sudo
+#     - user.sudo is defined

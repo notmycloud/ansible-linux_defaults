@@ -1,0 +1,14 @@
+---
+- name: Packages > Debian > APT > Install
+  ansible.builtin.apt:
+    name: "{{ default_packages | default(packages) }}"
+    state: present
+    install_recommends: false
+
+- name: Packages > Debian > APT > Upgrade
+  ansible.builtin.apt:
+    upgrade: dist
+
+- name: Packages > Debian > APT > Autoremove
+  ansible.builtin.apt:
+    autoremove: true

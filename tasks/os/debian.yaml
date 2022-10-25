@@ -1,0 +1,21 @@
+---
+- name: OS > Debian > APT > tmpfs Cache
+  ansible.builtin.blockinfile:
+    path: /etc/apt/apt.conf.d/01-tempdir
+    create: true
+    mode: '0644'
+    block: |
+      APT::ExtractTemplates::TempDir "/var/cache/apt-tmpfs";
+      DPkg {
+        Pre-Invoke  { "mkdir -p /var/cache/apt-tmpfs && mount -t tmpfs tmpfs /var/cache/apt-tmpfs" };
+        Post-Invoke { "umount /var/cache/apt-tmpfs" };
+      };
+
+- name: OS > Debian > APT > Update Package Cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: OS > Debian > Tmpreaper
+  ansible.builtin.include_role: 
+    name: ANXS.tmpreaper

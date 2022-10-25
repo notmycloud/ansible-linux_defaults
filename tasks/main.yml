@@ -1,0 +1,53 @@
+---
+# Include OS based variables
+- ansible.builtin.include_vars: "{{ ansible_os_family | lower }}.yaml"
+
+- ansible.builtin.include_tasks: ssh.yaml
+
+# Common setup per OS
+- include_tasks: "{{ lookup('first_found', files, skip=True)) }}"
+  vars:
+    files:
+      - "os/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yaml"
+      - "os/{{ ansible_distribution | lower }}.yaml"
+      - "os/{{ ansible_os_family | lower }}.yaml"
+
+# Install common packages
+- include_tasks: "{{ lookup('first_found', files, skip=True)) }}"
+  vars:
+    files:
+      - "packages/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yaml"
+      - "packages/{{ ansible_distribution | lower }}.yaml"
+      - "packages/{{ ansible_os_family | lower }}.yaml"
+
+# For not Alpine
+- name: Timezone > Set {{ default_timezone }}
+  ansible.builtin.timezone:
+    name: "{{ default_timezone }}"
+  when: "{{ ansible_os_family | lower }} != 'alpine'"
+
+# For Alpine
+- name: Timezone > Set {{ default_timezone }}
+  copy:
+    remote_src: yes
+    src: /usr/share/zoneinfo/{{ default_timezone }}
+    dest: /etc/localtime
+  when: "{{ ansible_os_family | lower }} == 'alpine'"
+
+# Setup the default shell
+- include_tasks: "{{ lookup('first_found', files, skip=True)) }}"
+  vars:
+    files:
+      - "shell/{{ default_shell | default(shell) }}/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yaml"
+      - "shell/{{ default_shell | default(shell) }}/{{ ansible_distribution | lower }}.yaml"
+      - "shell/{{ default_shell | default(shell) }}/{{ ansible_os_family | lower }}.yaml"
+      - "shell/{{ default_shell | default(shell) }}/main.yaml"
+
+# Setup host users
+- include_tasks: user/main.yaml
+
+# TODO: Logwatch
+# TODO: robertdebock.auditd (Debian & RedHat)
+# TODO: NFTables
+# TODO: SMTP Relay (Postfix to send logs and alerts)
+# TODO: Fail2Ban

@@ -1,0 +1,7 @@
+---
+packages:
+  - python3
+  - sudo
+  - tzdata
+
+shell: ash

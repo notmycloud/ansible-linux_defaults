@@ -1,0 +1,39 @@
+---
+- name: Shell > Debian > Configure Default > bash
+  ansible.builtin.include_tasks: "shell/bash/main.yaml"
+
+- name: Shell > Debian > Function > apt-get
+  ansible.builtin.blockinfile:
+    path: "/etc/profile.d/01-ansible-bash-function-apt-get.sh"
+    create: yes
+    mode: 0644
+    block: |
+      apt-get () {
+        if ! command -v apt-get &> /dev/null; then
+          echo "apt-get not be found, are you on Debian?"
+          return
+        fi
+        if [[ $(id -u) -ne 0 ]]; then
+          command sudo apt-get "$@"
+        else
+          command apt-get "$@"
+        fi
+      }
+
+- name: Shell > Debian > Function > apt
+  blockinfile:
+    path: "/etc/profile.d/01-ansible-bash-function-apt.sh"
+    create: yes
+    mode: 0644
+    block: |
+      apt () {
+        if ! command -v apt &> /dev/null; then
+          echo "apt not be found, are you on Debian?"
+          return
+        fi
+        if [[ $(id -u) -ne 0 ]]; then
+          command sudo apt "$@"
+        else
+          command apt "$@"
+        fi
+      }

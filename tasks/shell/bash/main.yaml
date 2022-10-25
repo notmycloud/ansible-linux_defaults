@@ -1,0 +1,23 @@
+---
+- name: Shell > Bash > Create /etc/profile.d folder
+  ansible.builtin.file:
+    path: /etc/profile.d
+    state: directory
+    mode: '0755'
+
+- name: Shell > Bash > Create Default Aliases
+  include_tasks: "shell/bash/aliases.yaml"
+
+- name: Shell > Bash > Create Default Functions
+  include_tasks: "shell/bash/functions.yaml"
+
+- name: Shell > Bash > Create Aliases
+  ansible.builtin.lineinfile:
+    dest: "/etc/profile.d/00-ansible-bash-aliases.sh"
+    create: true
+    mode: 0644
+    line: 'alias {{ alias.name }}="{{ alias.command }}"'
+    regexp: "^alias {{ alias.name }}="
+  loop: "{{ bash_aliases }}"
+  loop_control:
+    loop_var: alias

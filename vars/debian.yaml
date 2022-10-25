@@ -1,0 +1,14 @@
+---
+packages:
+  - sudo
+  - python3-minimal
+  - python3-pip
+  - python3-setuptools
+  - wget
+  - curl
+  - vim
+  # - mailutils
+  # - libsasl2-modules
+  # - acl
+
+shell: bash

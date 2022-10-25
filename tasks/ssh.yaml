@@ -1,0 +1,50 @@
+---
+# Configure SSH Port and trust Host Key
+- ansible.builtin.include_role: 
+    name: notmycloud.ssh_port_fingerprint
+
+# Fix issue with SSH not working on reboot
+# https://askubuntu.com/questions/1109934/ssh-server-stops-working-after-reboot-caused-by-missing-var-run-sshd
+  
+# - name: Ensure /etc/tmpfiles.d exists
+#   ansible.builtin.file:
+#     path: /etc/tmpfiles.d
+#     state: directory
+#     mode: '0755'
+
+# - name: Create sshd.conf for /run temp files
+#   ansible.builtin.lineinfile:
+#     path: /etc/tmpfiles.d/sshd.conf
+#     create: yes
+#     mode: '0644'
+#     regexp: '^d /run/sshd'
+#     line: d /run/sshd 0755 root root 
+
+#https://www.reddit.com/r/debian/comments/sfzwco/ssh_server_crashing/
+- name: SSH > Mitigation for SystemD SSH Socket race condition
+  ansible.builtin.lineinfile:
+    path: /lib/systemd/system/ssh@.service
+    insertafter: '^#[Service]'
+    regexp: '^RuntimeDirectoryPreserve='
+    line: RuntimeDirectoryPreserve=yes
+  failed_when: false
+
+- name: SSH > Systemd > Reload
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: SSH > Hardening
+  ansible.builtin.include_role:
+    name: devsec.hardening.ssh_hardening
+
+- name: SSH > Fingerprints > Trust well known sites
+  ansible.builtin.include_role:
+    name: notmycloud.ssh_keyscan
+  vars:
+    global_known_hosts: true
+    ssh:
+      port: "{{ keyscan.port }}"
+      host: "{{ keyscan.host }}"
+  loop: "{{ ssh_well_known_hosts }}"
+  loop_control:
+    loop_var: keyscan

@@ -1,0 +1,39 @@
+---
+- name: Shell > RedHat > Configure Default > bash
+  ansible.builtin.include_tasks: "shell/bash/main.yaml"
+
+- name: Shell > RedHat > Function > yum
+  ansible.builtin.blockinfile:
+    path: "/etc/profile.d/01-ansible-bash-function-yum.sh"
+    create: yes
+    mode: 0644
+    block: |
+      yum () {
+        if ! command -v yum &> /dev/null; then
+          echo "yum not be found, are you on RedHat?"
+          return
+        fi
+        if [[ $(id -u) -ne 0 ]]; then
+          command sudo yum "$@"
+        else
+          command yum "$@"
+        fi
+      }
+
+- name: Shell > RedHat > Function > dnf
+  ansible.builtin.blockinfile:
+    path: "/etc/profile.d/01-ansible-bash-function-dnf.sh"
+    create: yes
+    mode: 0644
+    block: |
+      dnf () {
+        if ! command -v dnf &> /dev/null; then
+          echo "dnf not be found, are you on RedHat?"
+          return
+        fi
+        if [[ $(id -u) -ne 0 ]]; then
+          command sudo dnf "$@"
+        else
+          command dnf "$@"
+        fi
+      }

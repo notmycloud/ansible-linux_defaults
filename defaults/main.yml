@@ -1,0 +1,29 @@
+---
+tmpreaper_show_warning: false
+tmpreaper_time: '7d'
+tmpreaper_protect_extra: /tmp/*.sock /tmp/hsperfdata_*
+tmpreaper_dirs: /tmp/. /var/tmp/.
+tmpreaper_delay: '256'
+tmpreaper_additional_options: --all
+tmpreaper_cron_hour: '2'
+tmpreaper_cron_minute: '1'
+
+ssh_server_ports:
+  - "{{ ansible_port }}"
+ssh_permit_root_login: without-password
+ssh_print_motd: true
+ssh_print_pam_motd: true
+ssh_print_debian_banner: true
+ssh_print_last_log: true
+sftp_enabled: true
+sftp_chroot: false
+ssh_client_port: 22
+ssh_client_compression: true
+ssh_compression: true
+ssh_max_auth_retries: 3
+ssh_max_sessions: 3
+ssh_custom_options:
+  - 'GlobalKnownHostsFile /etc/ssh/known_hosts.d/%k /etc/ssh/known_hosts'
+  - 'UserKnownHostsFile $HOME/.ssh/known_hosts.d/%k $HOME/.ssh/known_hosts'
+
+default_timezone: 'America/Chicago'
