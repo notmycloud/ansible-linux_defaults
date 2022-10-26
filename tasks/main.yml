@@ -1,10 +1,10 @@
 ---
+- name: Linux Defaults > SSH
+  ansible.builtin.include_tasks: ssh.yaml
+
 # Include OS based variables
 - name: Linux Defaults > Include OS Family Vars
   ansible.builtin.include_vars: "{{ ansible_os_family | lower }}.yaml"
-
-- name: Linux Defaults > SSH
-  ansible.builtin.include_tasks: ssh.yaml
 
 # Common setup per OS
 - name: Linux Defaults > OS
