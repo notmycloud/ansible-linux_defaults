@@ -8,7 +8,7 @@
 
 # Common setup per OS
 - name: Linux Defaults > OS
-  ansible.builtin.include_tasks: "{{ lookup('first_found', files, skip=True) }}"
+  ansible.builtin.include_tasks: "{{ lookup('first_found', files) }}"
   vars:
     files:
       - "os/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yaml"
@@ -17,7 +17,7 @@
 
 # Install common packages
 - name: Linux Defaults > Packages
-  ansible.builtin.include_tasks: "{{ lookup('first_found', files, skip=True) }}"
+  ansible.builtin.include_tasks: "{{ lookup('first_found', files) }}"
   vars:
     files:
       - "packages/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yaml"
@@ -40,7 +40,7 @@
 
 # Setup the default shell
 - name: Linux Defaults > Shell
-  ansible.builtin.include_tasks: "{{ lookup('first_found', files, skip=True) }}"
+  ansible.builtin.include_tasks: "{{ lookup('first_found', files) }}"
   vars:
     files:
       - "shell/{{ default_shell | default(shell) }}/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yaml"
