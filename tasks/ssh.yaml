@@ -33,6 +33,7 @@
 - name: Linux Defaults > SSH > Systemd > Reload
   ansible.builtin.systemd:
     daemon_reload: true
+  become: true
 
 - name: Linux Defaults > SSH > Hardening
   ansible.builtin.include_role:
