@@ -35,6 +35,9 @@
     daemon_reload: true
   become: true
 
+- name: SSH Port > Change > Gather Facts
+  ansible.builtin.setup:
+
 - name: Linux Defaults > SSH > Hardening
   ansible.builtin.include_role:
     name: devsec.hardening.ssh_hardening
@@ -44,6 +47,7 @@
     name: notmycloud.ssh_keyscan
   vars:
     global_known_hosts: true
+    verify_host_keys: false
     ssh:
       port: "{{ keyscan.port }}"
       host: "{{ keyscan.host }}"
